@@ -9,17 +9,22 @@ export default createStore({
     dopln: [],
     selected: [],
     cena: 0,
+    web_pridal: false,
+    host_pridal: false,
   },
   mutations: {
     addCena(state, data) {
       state.cena += data.cena
-      if (data.cena > 0)
+      if (data.cena > 0) {
         state.selected.push(data.id)
-      else   
-        state.selected.filter(p => p.polozka != data.id)
-    },
-    setGraf(state, arr) {
-      state.graficke = arr == undefined ? [] : arr
+        if (data.from == 'Web') state.web_pridal = true  
+        else if (data.from == 'Host') state.host_pridal = true  
+      }
+      else {
+        state.selected = state.selected.filter(p => p != data.id)
+        if (data.from == 'Web') state.web_pridal = false  
+        else if (data.from == 'Host') state.host_pridal = false  
+      }
     },
     addGraf(state, data) {
       state.graficke.push(data)
@@ -36,17 +41,20 @@ export default createStore({
     addDoplnky(state, data) {
       state.dopln.push(data)
     },
+    setGraf(state, arr) {
+      state.graficke = arr == undefined ? [] : arr
+    },
     setG3d(state, arr) {
-      state.g3d = [...arr]
+      state.g3d = arr == undefined ? [] : arr
     },
     setWeb(state, arr) {
-      state.web = [...arr]
+      state.web = arr == undefined ? [] : arr
     },
     setHost(state, arr) {
-      state.host = [...arr]
+      state.host = arr == undefined ? [] : arr
     },
     setDopln(state, arr) {
-      state.dopln = [...arr]
+      state.dopln = arr == undefined ? [] : arr
     },
     updateGraf(state, data) {
       state.graficke.forEach(p => {

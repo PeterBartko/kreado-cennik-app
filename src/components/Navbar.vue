@@ -35,4 +35,23 @@ export default {
     text-decoration: none;
   }
 
+  @media screen and (max-width: 670px) {
+    div {
+      padding: .4rem;
+      justify-content: space-around;
+    }
+    .link-w {
+      display: flex;
+      gap: .8rem;
+    }
+    .link-w a {
+      font-size: 1.2rem;
+      margin-left: 0;
+    }
+    p {
+      font-size: 1.5rem;
+    }
+
+  }
+
 </style>

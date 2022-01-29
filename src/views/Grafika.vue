@@ -59,4 +59,10 @@
     color: #aaa;
   }
 
+  @media screen and (max-width: 900px) {
+    .polozky-wrap {
+      width: 90%;
+    }
+  }
+
 </style>

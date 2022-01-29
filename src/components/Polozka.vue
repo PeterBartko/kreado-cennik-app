@@ -2,16 +2,16 @@
   <div class="polozka" :class="`bg-${i % 3}`">
     <div class="wrap">
       <p>{{ dataa.polozka }}</p>
-      <button v-show="upravil" class="btn-u btn-x" @click="remove">
-        <img src="../assets/delete.svg" alt="">
-      </button>
       <div class="cena-wrap">
+        <button v-show="upravil" class="btn-u btn-x" @click="remove">
+          <img src="../assets/delete.svg" alt="">
+        </button>
         <button class="btn-u" @click="uprava">
           <img src="../assets/settings.svg" alt="">
         </button>
         <button class="btn" v-show="upravil" @click="save">Uložiť</button>
         <div v-show="!upravil" class="pridat-odob">
-          <button class="btn" v-if="pridal" @click="add_cena">Pridať</button>
+          <button ref="pridat" class="btn" v-if="pridal" @click="add_cena">Pridať</button>
           <button class="btn btn-odob" v-else @click="remove_cena">Odobrať</button>
         </div>
         <input v-show="upravil" ref="cena" type="number">
@@ -19,7 +19,6 @@
       </div>
     </div>
     <p v-show="dataa.popis" v-for="popis,i in popisi" :key="i" class="popis">{{ isList() ? '●' + popis : popis}}</p>
-    <!-- <p v-show="dataa.popis" class="popis">{{ dataa.popis }}</p> -->
   </div>
 </template>
 
@@ -30,16 +29,17 @@
     data: () => ({
       pridal: true,
       upravil: false,
-      popisi: []
+      popisi: [],
     }),
     methods: {
       save() {
         this.$store.commit(`update${this.from}`, {id: this.dataa.polozka, cena: parseInt(this.$refs.cena.value)})
+        mixin.saveToDB(this.from)
         this.upravil = false
       },
       remove() {
         this.$store.commit(`remove${this.from}`, this.dataa.polozka)
-        mixin.saveToDB()
+        mixin.saveToDB(this.from)
         this.upravil = false
       },
       uprava() {
@@ -50,13 +50,13 @@
       add_cena() {
         if (this.pridal) {
           this.pridal = false
-          this.$store.commit('addCena', {cena: this.dataa.cena, id: this.dataa.polozka})
+          this.$store.commit('addCena', {cena: this.dataa.cena, id: this.dataa.polozka, from: this.from})
         }
       },
       remove_cena() {
         if (!this.pridal) {
           this.pridal = true
-          this.$store.commit('addCena', {cena: -this.dataa.cena, id: this.dataa.polozka})
+          this.$store.commit('addCena', {cena: -this.dataa.cena, id: this.dataa.polozka, from: this.from})
         }
       },
       isList() {
@@ -67,7 +67,34 @@
       this.popisi = this.dataa.popis.split('●').filter(p => p != '')
       if (this.$store.state.selected.some(p => p == this.dataa.polozka)) 
         this.pridal = false
-      // console.log(this.dataa);
+    },
+    watch: {
+      '$store.state.web_pridal': {
+        handler: function(nv) {
+          if (this.from == 'Web' && nv) {
+            if (this.$refs.pridat)
+              this.$refs.pridat.setAttribute('disabled', '')
+          }
+          else if (this.from == 'Web' && !nv) {
+            if (this.$refs.pridat) 
+              this.$refs.pridat.removeAttribute('disabled')
+          }
+        },
+        immediate: true
+      },
+      '$store.state.host_pridal': {
+        handler: function(nv) {
+          if (this.from == 'Host' && nv) {
+            if (this.$refs.pridat) 
+              this.$refs.pridat.setAttribute('disabled', '')
+          }
+          else if (this.from == 'Host' && !nv) {
+            if (this.$refs.pridat) 
+              this.$refs.pridat.removeAttribute('disabled')
+          }
+        },
+        immediate: true
+      }
     },
   }      
 </script>
@@ -82,12 +109,13 @@
     align-items: center;
   }
   .polozka {
-    border: 3px solid red;
+    border: 3px solid transparent;
     border-radius: .5rem;
     margin-bottom: .5rem;
+    position: relative;
   }
   .cena-wrap {
-    width: 20%;
+    gap: .5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -110,7 +138,6 @@
   }
 
   .btn-u {
-    margin-right: .5rem;
     background: #ffc400;
     width: 37px;
     display: grid;
@@ -121,7 +148,7 @@
   }
   .btn-x {
     background: #c54646;
-    margin-left: auto;
+    /* margin-left: auto; */
   }
   .btn-x:hover {
     background: #ec4444eb;
@@ -165,6 +192,7 @@
     border-radius: .3rem;
     border: 2px solid transparent;
     padding-right: .1rem;
+    width: 80px;
   }
 
   input::-webkit-outer-spin-button,
@@ -174,6 +202,22 @@
   }
   input[type=number] {
     -moz-appearance: textfield;
+  }
+
+  @media screen and (max-width: 670px) {
+    .wrap {
+      flex-direction: column;
+      height: unset;
+      margin: .4rem 0;
+    }
+    .cena-wrap {
+      width: 91.7%;
+      position: absolute;
+      bottom: 10.2px;
+    }
+    .polozka {
+      padding-bottom: 3rem;
+    }
   }
 
 </style>

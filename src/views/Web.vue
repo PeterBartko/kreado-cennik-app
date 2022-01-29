@@ -39,8 +39,3 @@
     }
   }
 </script>
-
-
-<style>
-
-</style>

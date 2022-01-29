@@ -29,7 +29,7 @@
           cena: parseInt(this.$refs.cena.value),
           popis: ''         
         })
-        mixin.saveToDB()
+        mixin.saveToDB(this.from)
         this.remove()
       },
       remove() {
@@ -68,7 +68,6 @@
   }
 
   .cena-wrap {
-    width: 20%;
     display: flex;
     justify-content: space-between;
     align-items: center;
