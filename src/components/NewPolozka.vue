@@ -16,7 +16,7 @@
 </template>
 
 <script>
-  import mixin from '../mixins.js'
+  import { saveToDB } from '../mixins.js'
   export default {
     props: ['from'],
     data: () => ({
@@ -24,12 +24,13 @@
     }),
     methods: {
       add() {
-        this.$store.commit(`add${this.from}`, {
+        this.$store.commit(`addPolozka`, {
           polozka: this.$refs.nazov.innerText,
           cena: parseInt(this.$refs.cena.value),
+          from: this.from,
           popis: ''         
         })
-        mixin.saveToDB(this.from)
+        saveToDB(this.from)
         this.remove()
       },
       remove() {
@@ -104,7 +105,7 @@
   }
 
   input[type=number] {
-    width: 46.3%;
+    width: 80px;
     margin-left: .6rem;
     height: 37px;
     font-size: inherit;

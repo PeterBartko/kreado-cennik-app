@@ -13,33 +13,35 @@ export default createStore({
     host_pridal: false,
   },
   mutations: {
-    addCena(state, data) {
-      state.cena += data.cena
-      if (data.cena > 0) {
-        state.selected.push(data.id)
-        if (data.from == 'Web') state.web_pridal = true  
-        else if (data.from == 'Host') state.host_pridal = true  
+    addCena(state, {id, cena, from}) {
+      state.cena += cena
+      if (cena > 0) {
+        state.selected.push(id)
+        if (from == 'Web') state.web_pridal = true  
+        else if (from == 'Host') state.host_pridal = true  
       }
       else {
-        state.selected = state.selected.filter(p => p != data.id)
-        if (data.from == 'Web') state.web_pridal = false  
-        else if (data.from == 'Host') state.host_pridal = false  
+        state.selected = state.selected.filter(p => p != id)
+        if (from == 'Web') state.web_pridal = false  
+        else if (from == 'Host') state.host_pridal = false  
       }
     },
-    addGraf(state, data) {
-      state.graficke.push(data)
-    },
-    addG3d(state, data) {
-      state.g3d.push(data)
-    },
-    addWeb(state, data) {
-      state.web.push(data)
-    },
-    addHost(state, data) {
-      state.host.push(data)
-    },
-    addDoplnky(state, data) {
-      state.dopln.push(data)
+    addPolozka(state, data) {
+      if (data.from == 'grafika') {
+        state.graficke.push(data)
+      }
+      else if (data.from == 'tride') {
+        state.g3d.push(data)
+      }
+      else if (data.from == 'web') {
+        state.web.push(data)
+      }
+      else if (data.from == 'doplnky') {
+        state.dopln.push(data)
+      }
+      else if (data.from == 'hosting') {
+        state.host.push(data)
+      }
     },
     setGraf(state, arr) {
       state.graficke = arr == undefined ? [] : arr
@@ -56,51 +58,30 @@ export default createStore({
     setDopln(state, arr) {
       state.dopln = arr == undefined ? [] : arr
     },
-    updateGraf(state, data) {
-      state.graficke.forEach(p => {
-        if (data.id == p.polozka) 
-          p.cena = data.cena
-      })
+    updatePolozka(state, {id, cena, from}) {
+      if (from == 'grafika')
+        state.graficke.forEach(p => { if (id == p.polozka) p.cena = cena})
+      else if (from == 'tride')
+        state.g3d.forEach(p => { if (id == p.polozka) p.cena = cena})
+      else if (from == 'web')
+        state.web.forEach(p => { if (id == p.polozka) p.cena = cena})
+      else if (from == 'doplnky')
+        state.dopln.forEach(p => { if (id == p.polozka) p.cena = cena})
+      else if (from == 'hosting')
+        state.host.forEach(p => { if (id == p.polozka) p.cena = cena})
     },
-    updateG3d(state, data) {
-      state.g3d.forEach(p => {
-        if (data.id == p.polozka) 
-          p.cena = data.cena
-      })
+    removePolozka(state, {id, from}) {
+      if (from == 'grafika')
+        state.graficke = state.graficke.filter(p => p.polozka != id)
+      else if (from == 'tride')
+        state.g3d = state.g3d.filter(p => p.polozka != id)
+      else if (from == 'web')
+        state.web = state.web.filter(p => p.polozka != id)
+      else if (from == 'doplnky')
+        state.dopln = state.dopln.filter(p => p.polozka != id)
+      else if (from == 'hosting')
+        state.host = state.host.filter(p => p.polozka != id)
     },
-    updateWeb(state, data) {
-      state.web.forEach(p => {
-        if (data.id == p.polozka) 
-          p.cena = data.cena
-      })
-    },
-    updateHost(state, data) {
-      state.host.forEach(p => {
-        if (data.id == p.polozka) 
-          p.cena = data.cena
-      })
-    },
-    updateDopln(state, data) {
-      state.dopln.forEach(p => {
-        if (data.id == p.polozka) 
-          p.cena = data.cena
-      })
-    },
-    removeGraf(state, id) {
-      state.graficke = state.graficke.filter(p => p.polozka != id)
-    },
-    removeG3d(state, id) {
-      state.g3d = state.g3d.filter(p => p.polozka != id)
-    },
-    removeWeb(state, id) {
-      state.web = state.web.filter(p => p.polozka != id)
-    },
-    removeHost(state, id) {
-      state.host = state.host.filter(p => p.polozka != id)
-    },
-    removeDoplnky(state, id) {
-      state.dopln = state.dopln.filter(p => p.polozka != id)
-    }
   },
   actions: {},
   modules: {},

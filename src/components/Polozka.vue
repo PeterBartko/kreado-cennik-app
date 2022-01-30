@@ -23,9 +23,9 @@
 </template>
 
 <script>
-  import mixin from '../mixins.js'
+  import { saveToDB } from '../mixins.js'
   export default {
-    props: ['dataa', 'i', 'from'],
+    props: ['dataa', 'i'],
     data: () => ({
       pridal: true,
       upravil: false,
@@ -33,13 +33,13 @@
     }),
     methods: {
       save() {
-        this.$store.commit(`update${this.from}`, {id: this.dataa.polozka, cena: parseInt(this.$refs.cena.value)})
-        mixin.saveToDB(this.from)
+        this.$store.commit(`updatePolozka`, {id: this.dataa.polozka, cena: parseInt(this.$refs.cena.value), from: this.dataa.from})
+        saveToDB(this.dataa.from)
         this.upravil = false
       },
       remove() {
-        this.$store.commit(`remove${this.from}`, this.dataa.polozka)
-        mixin.saveToDB(this.from)
+        this.$store.commit(`removePolozka`, {id: this.dataa.polozka, from: this.dataa.from})
+        saveToDB(this.dataa.from)
         this.upravil = false
       },
       uprava() {
@@ -71,11 +71,11 @@
     watch: {
       '$store.state.web_pridal': {
         handler: function(nv) {
-          if (this.from == 'Web' && nv) {
+          if (this.from == 'web' && nv) {
             if (this.$refs.pridat)
               this.$refs.pridat.setAttribute('disabled', '')
           }
-          else if (this.from == 'Web' && !nv) {
+          else if (this.from == 'web' && !nv) {
             if (this.$refs.pridat) 
               this.$refs.pridat.removeAttribute('disabled')
           }
@@ -84,11 +84,11 @@
       },
       '$store.state.host_pridal': {
         handler: function(nv) {
-          if (this.from == 'Host' && nv) {
+          if (this.from == 'hosting' && nv) {
             if (this.$refs.pridat) 
               this.$refs.pridat.setAttribute('disabled', '')
           }
-          else if (this.from == 'Host' && !nv) {
+          else if (this.from == 'hosting' && !nv) {
             if (this.$refs.pridat) 
               this.$refs.pridat.removeAttribute('disabled')
           }
