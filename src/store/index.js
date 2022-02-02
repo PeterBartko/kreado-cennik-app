@@ -8,6 +8,7 @@ export default createStore({
     host: [],
     dopln: [],
     selected: [],
+    disabled: [],
     cena: 0,
     web_pridal: false,
     host_pridal: false,
@@ -17,13 +18,25 @@ export default createStore({
       state.cena += cena
       if (cena > 0) {
         state.selected.push(id)
-        if (from == 'Web') state.web_pridal = true  
-        else if (from == 'Host') state.host_pridal = true  
+        if (from == 'web') {
+          state.web_pridal = true  
+          state.disabled.push(id)
+        } 
+        else if (from == 'hosting') {
+          state.host_pridal = true  
+          state.disabled.push(id)
+        }
       }
       else {
         state.selected = state.selected.filter(p => p != id)
-        if (from == 'Web') state.web_pridal = false  
-        else if (from == 'Host') state.host_pridal = false  
+        if (from == 'web') {
+          state.web_pridal = false  
+          state.disabled = state.disabled.filter(p => p != id)
+        }
+        else if (from == 'hosting') {
+          state.host_pridal = false  
+          state.disabled = state.disabled.filter(p => p != id)
+        }
       }
     },
     addPolozka(state, data) {

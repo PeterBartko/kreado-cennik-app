@@ -1,7 +1,8 @@
 <template>
   <div class="polozka bg-2">
     <div class="wrap">
-      <p ref="nazov" id="nazov" contenteditable>{{ polozka }}</p>
+      <input type="text" id="nazov" placeholder="Nazov" v-model="nazov">
+      <!-- <p ref="nazov" id="nazov" contenteditable>{{ polozka }}</p> -->
       <div class="cena-wrap">
         <button @click="remove" class="btn-u btn-x">
           <img src="../assets/delete.svg" alt="">
@@ -9,9 +10,10 @@
         <button @click="add" class="btn-u btn-y">
           <img src="../assets/done.svg" alt="">
         </button>
-        <input ref="cena" autofocus type="number">€
+        <input v-model="cena" autofocus type="number">€
       </div>
     </div>
+    <textarea placeholder="Popis" id="popis" v-model="popis" cols="30" rows="10"></textarea>
   </div>
 </template>
 
@@ -20,25 +22,40 @@
   export default {
     props: ['from'],
     data: () => ({
-      polozka: 'Nazov'
+      nazov: '',
+      cena: 0,
+      popis: ''
     }),
     methods: {
       add() {
+        if (this.cena == 0 && this.nazov == '') {
+          alert('Zadaj cenu aj názov')
+          return
+        } 
+        else if (this.nazov == '') {
+          alert('Nezadal si názov')
+          return
+        } 
+        else if (this.cena == 0) {
+          alert('Nezadal si cenu')
+          return
+        } 
+
         this.$store.commit(`addPolozka`, {
-          polozka: this.$refs.nazov.innerText,
-          cena: parseInt(this.$refs.cena.value),
+          polozka: this.nazov,
+          cena: this.cena,
           from: this.from,
-          popis: ''         
+          popis: this.popis         
         })
         saveToDB(this.from)
         this.remove()
       },
       remove() {
-        this.$refs.nazov.innerText = 'Nazov'
-        this.$refs.cena.value = null
+        this.nazov = ''
+        this.cena = 0
+        this.popis = ''
         this.$emit('hide', this.from)
       },
-      
     }
   }
 </script>
@@ -46,26 +63,47 @@
 <style scoped>
 
   #nazov {
-    border: 2px solid #00c4ff;
+    border: 2px solid transparent;
     border-radius: .3rem;
+    height: 37px;
     padding: 0 .4rem;
+    font-size: 2rem;
   }
   #nazov:focus {
     outline: none;
-    /* border: 2px solid #00c4ff; */
+    border-color: #00c4ff;
   }
   .wrap {
-    padding: 0 1rem;
-    height: 4rem;
+    padding: 0;
+    height: 3.5rem;
     display: flex;
     justify-content: space-between;
     font-size: 2rem;
-    align-items: center;
+    align-items: flex-start;
   }
   .polozka {
     border: 3px solid red;
     border-radius: .5rem;
+    padding: 1rem;
     margin-bottom: .5rem;
+  }
+
+  #popis {
+    max-width: 100%;
+    width: 100%;
+    height: 130px;
+    border: 2px solid #00c4ff25;
+    border-radius: 0.3rem;
+    font-size: 1rem;
+    font-family: inherit;
+    padding: .5rem;
+  }
+  #popis:focus {
+    outline: none;
+    border-color: #00c4ff;
+  }
+  #popis::placeholder {
+    color: #ccccccfc;
   }
 
   .cena-wrap {
@@ -112,12 +150,12 @@
     color: inherit;
     text-align: end;
     border-radius: .3rem;
-    border: 2px solid #00c4ff;
+    border: 2px solid transparent;
     padding-right: .1rem;
   }
   input[type=number]:focus {
     outline: none;
-    border: 2px solid #00c4ff;  
+    border-color: #00c4ff;  
   }
 
   input::-webkit-outer-spin-button,
@@ -127,6 +165,19 @@
   }
   input[type=number] {
     -moz-appearance: textfield;
+  }
+
+  @media screen and (max-width: 670px) {
+    .polozka {
+      padding-bottom: 3.3rem;
+    }
+    .wrap {
+      height: fit-content;
+      margin-bottom: 1rem;
+    }
+    #nazov {
+      width: 100%;
+    }
   }
 
 </style>

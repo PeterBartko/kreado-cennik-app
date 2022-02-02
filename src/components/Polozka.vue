@@ -50,13 +50,13 @@
       add_cena() {
         if (this.pridal) {
           this.pridal = false
-          this.$store.commit('addCena', {cena: this.dataa.cena, id: this.dataa.polozka, from: this.from})
+          this.$store.commit('addCena', {cena: this.dataa.cena, id: this.dataa.polozka, from: this.dataa.from})
         }
       },
       remove_cena() {
         if (!this.pridal) {
           this.pridal = true
-          this.$store.commit('addCena', {cena: -this.dataa.cena, id: this.dataa.polozka, from: this.from})
+          this.$store.commit('addCena', {cena: -this.dataa.cena, id: this.dataa.polozka, from: this.dataa.from})
         }
       },
       isList() {
@@ -67,31 +67,32 @@
       this.popisi = this.dataa.popis.split('●').filter(p => p != '')
       if (this.$store.state.selected.some(p => p == this.dataa.polozka)) 
         this.pridal = false
+      
+      if (this.$store.state.web_pridal && this.dataa.from == 'web') {
+        if (this.$store.state.disabled.some(p => p != this.dataa.polozka)) 
+          this.$refs.pridat?.setAttribute('disabled', '')
+      }
+      if (this.$store.state.host_pridal && this.dataa.from == 'hosting') {
+        if (this.$store.state.disabled.some(p => p != this.dataa.polozka)) 
+          this.$refs.pridat?.setAttribute('disabled', '')
+      }
     },
     watch: {
       '$store.state.web_pridal': {
         handler: function(nv) {
-          if (this.from == 'web' && nv) {
-            if (this.$refs.pridat)
-              this.$refs.pridat.setAttribute('disabled', '')
-          }
-          else if (this.from == 'web' && !nv) {
-            if (this.$refs.pridat) 
-              this.$refs.pridat.removeAttribute('disabled')
-          }
+          if (this.dataa.from == 'web' && nv)
+            this.$refs.pridat?.setAttribute('disabled', '')
+          else if (this.dataa.from == 'web' && !nv)
+            this.$refs.pridat?.removeAttribute('disabled')
         },
         immediate: true
       },
       '$store.state.host_pridal': {
         handler: function(nv) {
-          if (this.from == 'hosting' && nv) {
-            if (this.$refs.pridat) 
-              this.$refs.pridat.setAttribute('disabled', '')
-          }
-          else if (this.from == 'hosting' && !nv) {
-            if (this.$refs.pridat) 
-              this.$refs.pridat.removeAttribute('disabled')
-          }
+          if (this.dataa.from == 'hosting' && nv)
+            this.$refs.pridat?.setAttribute('disabled', '')
+          else if (this.dataa.from == 'hosting' && !nv)
+            this.$refs.pridat?.removeAttribute('disabled')
         },
         immediate: true
       }
