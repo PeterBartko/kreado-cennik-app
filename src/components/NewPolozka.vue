@@ -2,7 +2,6 @@
   <div class="polozka bg-2">
     <div class="wrap">
       <input type="text" id="nazov" placeholder="Nazov" v-model="nazov">
-      <!-- <p ref="nazov" id="nazov" contenteditable>{{ polozka }}</p> -->
       <div class="cena-wrap">
         <button @click="remove" class="btn-u btn-x">
           <img src="../assets/delete.svg" alt="">
@@ -10,7 +9,7 @@
         <button @click="add" class="btn-u btn-y">
           <img src="../assets/done.svg" alt="">
         </button>
-        <input v-model="cena" autofocus type="number">€
+        <input v-model="cena" type="number">€
       </div>
     </div>
     <textarea placeholder="Popis" id="popis" v-model="popis" cols="30" rows="10"></textarea>

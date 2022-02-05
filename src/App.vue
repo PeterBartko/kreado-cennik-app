@@ -8,6 +8,7 @@
   import db from "./firestore/config"
   import Navbar from './components/Navbar.vue'
   import Footerr from './components/Footerr.vue'
+
   export default {
     components: { Navbar, Footerr },
     async mounted() {

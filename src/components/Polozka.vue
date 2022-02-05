@@ -50,7 +50,7 @@
       add_cena() {
         if (this.pridal) {
           this.pridal = false
-          this.$store.commit('addCena', {cena: this.dataa.cena, id: this.dataa.polozka, from: this.dataa.from})
+          this.$store.commit('addCena', {cena: this.dataa.cena, id: this.dataa.polozka, from: this.dataa.from, popis: this.dataa.popis})
         }
       },
       remove_cena() {

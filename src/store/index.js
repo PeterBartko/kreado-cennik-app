@@ -9,15 +9,18 @@ export default createStore({
     dopln: [],
     selected: [],
     disabled: [],
+    vybral: [],
     cena: 0,
+
     web_pridal: false,
     host_pridal: false,
   },
   mutations: {
-    addCena(state, {id, cena, from}) {
+    addCena(state, {cena, id, from, popis}) {
       state.cena += cena
       if (cena > 0) {
         state.selected.push(id)
+        state.vybral.push({polozka: id, cena, popis,})
         if (from == 'web') {
           state.web_pridal = true  
           state.disabled.push(id)
@@ -29,6 +32,7 @@ export default createStore({
       }
       else {
         state.selected = state.selected.filter(p => p != id)
+        state.vybral = state.vybral.filter(p => p.polozka != id)
         if (from == 'web') {
           state.web_pridal = false  
           state.disabled = state.disabled.filter(p => p != id)

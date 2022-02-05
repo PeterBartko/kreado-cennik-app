@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "firebase": "^8.7.1",
+    "jspdf": "^2.5.1",
     "vue": "^3.2.25",
     "vue-router": "^4.0.12",
     "vuex": "^4.0.2"
